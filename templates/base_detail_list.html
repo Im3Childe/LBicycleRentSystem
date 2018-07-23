@@ -1,0 +1,21 @@
+{# 详情页 列表页 #}
+{% extends 'base.html' %}
+{# 网站主体内容块 #}
+{% block body %}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部分类</h1>
+				<span></span>
+				<ul class="subnav">
+                    {% for type in types %}
+{#					<li><a href="{% url 'system:list' type.id 1 %}" >{{ type.goods }}</a></li>#}
+                        <li><a href="#" >{{ type.brand }}</a></li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+    {# 详情页，列表页主体内容块 #}
+    {% block main_content %}{% endblock main_content %}
+{% endblock body %}

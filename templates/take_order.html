@@ -1,0 +1,104 @@
+{% extends 'base_no_cart.html' %}
+{% load staticfiles %}
+{% block title %}-提交订单-{% endblock title %}
+{% block page_title %}提交订单{% endblock page_title %}
+{% block body %}
+
+
+	<div class="common_list_con clearfix">
+
+	</div>
+	
+	<h3 class="common_title">支付方式</h3>	
+	<div class="common_list_con clearfix">
+		<div class="pay_style_con clearfix">
+			<input type="radio" name="pay_style" value="1">
+			<label class="weixin">微信支付</label>
+			<input type="radio" name="pay_style" value="2">
+			<label class="zhifubao"></label>
+		</div>
+	</div>
+
+	<h3 class="common_title">您的订单</h3>
+	
+	<div class="common_list_con clearfix">
+{#		<ul class="goods_list_th clearfix">#}
+{#			<li class="col01">订单Id</li>#}
+{#			<li class="col03">价格</li>#}
+{#			<li class="col04">数量</li>#}
+{#			<li class="col05">小计</li>		#}
+{#		</ul>#}
+{#        {% for sku in skus %}#}
+		<ul class="goods_list_td clearfix">
+			<li class="col01">{{ forloop.counter }}</li>
+{#			<li class="col02"><img src="{% static sku.img %}"></li>#}
+			<li class="col03">{{ order.id }}</li>
+{#			<li class="col05">{{ sku.price }}元/小时</li>#}
+			<li class="col06">{{ order.time}}</li>
+			<li class="col07">{{ order.amount }}元/小时</li>
+		</ul>
+{#        {% endfor %}#}
+	</div>
+
+	<h3 class="common_title">总单价结算</h3>
+
+	<div class="common_list_con clearfix">
+		<div class="settle_con">
+			<div class="total_goods_count">共<em>{{ order.goodsNum}}</em>辆自行车，总单价<b>{{ order.amount}}元/小时</b></div>
+{#			<div class="total_pay">实付款：<b>{{ order.amount }}元</b></div>#}
+		</div>
+	</div>
+
+	<div class="order_submit clearfix">
+        {% csrf_token %}
+		<a href="javascript:;" order_id={{ order.id }} id="order_btn">提交订单</a>
+	</div>	
+{% endblock body %}
+{% block bottom %}
+	<div class="popup_con">
+		<div class="popup">
+			<p>订单提交成功！</p>
+		</div>
+		
+		<div class="mask"></div>
+	</div>
+{% endblock bottom %}
+{% block bottomfiles %}
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+	<script type="text/javascript">
+		$('#order_btn').click(function() {
+            // 获取用户选择的地址id, 支付方式, 要购买的商品id字符串
+{#            addr_id = $('input[name="addr_id"]:checked').val()#}
+            pay_method = $('input[name="pay_style"]:checked').val()
+{#            sku_ids = $(this).attr('sku_ids')#}
+            order_id =  $(this).attr('order_id')
+            csrf = $('input[name="csrfmiddlewaretoken"]').val()
+            // alert(addr_id+":"+pay_method+':'+sku_ids)
+            // 组织参数
+            params = {'order_id':order_id, 'pay_method':pay_method, 'csrfmiddlewaretoken':csrf}
+            // 发起ajax post请求，访问/order/commit, 传递的参数: addr_id pay_method, sku_ids
+            $.post('/ordercommit', params, function (data) {
+                if (data.res == 5){
+                    // 创建成功
+                    alert('支付方式为:'+data.paymethod+' '+'支付金额为:'+data.money+" "+'支付订单编号为'+data.order_id)
+                }
+                else{
+                    alert(data.errmsg)
+                }
+            })
+
+
+{#			localStorage.setItem('order_finish',2);#}
+{##}
+{#			$('.popup_con').fadeIn('fast', function() {#}
+{##}
+{#				setTimeout(function(){#}
+{#					$('.popup_con').fadeOut('fast',function(){#}
+{#						window.location.href = 'index.html';#}
+{#					});	#}
+{#				},3000)#}
+{#				#}
+{#			});#}
+		});
+	</script>
+{% endblock bottomfiles %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}-首页-{% endblock title %}
+{% block topfiles %}
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/slide.js' %}"></script>
+{% endblock topfiles %}
+{% block body %}
+	<div class="navbar_con">
+		<div class="navbar">
+			<h1 class="fl">全部商品分类</h1>
+		</div>
+	</div>
+
+	<div class="center_con clearfix">
+		<ul class="subnav fl">
+            {% for type in types %}
+			    <li><a href="#model0{{ forloop.counter }}" >{{ type.brand }}</a></li>
+            {% endfor %}
+		</ul>
+		<div class="slide fl">
+			<ul class="slide_pics">
+
+				    <li><img src="" alt="幻灯片"></li>
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">
+
+			    <img src="">
+		</div>
+	</div>
+
+    {% for type in types %}
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model0{{ forloop.counter }}">{{ type.brand }}</h3>
+{#			<div class="subtitle fl">#}
+{#				<span>|</span>#}
+{#                {% for banner in type.good %}#}
+{#				    <a href="{% url 'goods:detail' banner.id  %}">{{ banner.goods}}</a>#}
+{#				{% endfor %}#}
+{#			</div>#}
+			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="{%  static type.img %}  "></div>
+			<ul class="goods_list fl">
+                {% for banner in type.good %}
+				<li>
+					<h4><a href="{% url 'system:detail' banner.id  %}">{{ banner.good }}</a></h4>
+					<a href="{% url 'system:detail' banner.id  %}"><img src="{% static banner.img %}"></a>
+					<div class="prize">¥ {{ banner.price }}</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+    {% endfor %}
+{% endblock body %}
